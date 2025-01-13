@@ -4,9 +4,11 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import path from "path";
 import { defineConfig } from "vite";
 
-const REMOTE_PORT = 3001;
+const CORE_REMOTE_PORT = 3001;
+const FLEET_REMOTE_PORT = 3002;
 
-export default defineConfig(async ({ command }) => ({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default defineConfig(async (options) => ({
   base: "./",
   server: {
     port: 3000,
@@ -14,9 +16,13 @@ export default defineConfig(async ({ command }) => ({
     fs: {
       allow: ["."],
     },
-    proxy: { "/src/remote_assets": `http://localhost:${REMOTE_PORT}/` },
+    proxy: {
+      "/src/remote_assets": `http://localhost:${CORE_REMOTE_PORT}/`,
+      "/core": `http://localhost:${CORE_REMOTE_PORT}/`,
+      "/fleet": `http://localhost:${FLEET_REMOTE_PORT}/`,
+    },
     // *INFO: CORS is required to allow the remote to be loaded in the host
-    cors: true, // Enable CORS for preview mode too
+    cors: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -33,7 +39,7 @@ export default defineConfig(async ({ command }) => ({
       pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
     },
   },
-  // *INFO: this build config used for static build
+  // *INFO: this build config can able work with static page
   build: {
     target: "esnext",
     minify: false,
@@ -44,16 +50,26 @@ export default defineConfig(async ({ command }) => ({
         format: "esm",
       },
     },
+    modulePreload: {
+      polyfill: false,
+    },
   },
   plugins: [
     federation({
       name: "host",
       remotes: {
-        remote: {
+        coreRemote: {
           type: "module",
-          name: "remote",
-          entry: `http://localhost:${REMOTE_PORT}/remoteEntry.js`,
-          entryGlobalName: "remote",
+          name: "coreRemote",
+          entry: `http://localhost:${CORE_REMOTE_PORT}/remoteEntry.js`,
+          entryGlobalName: "coreRemote",
+          shareScope: "default",
+        },
+        fleetRemote: {
+          type: "module",
+          name: "fleetRemote",
+          entry: `http://localhost:${FLEET_REMOTE_PORT}/remoteEntry.js`,
+          entryGlobalName: "fleetRemote",
           shareScope: "default",
         },
       },

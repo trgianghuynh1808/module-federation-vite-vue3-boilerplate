@@ -1,12 +1,12 @@
 {
-  "name": "remote",
+  "name": "fleet-remote",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "run-p vite:dev",
-    "vite:dev": "vite --port 4174",
+    "vite:dev": "vite --port 3002",
     "build": "run-p type-check build-only",
-    "preview": "vite preview --port 4174",
+    "preview": "vite preview --port 3002",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
@@ -14,7 +14,8 @@
   "dependencies": {
     "esbuild-plugin-inline-image": "^0.0.9",
     "pinia": "^2.0.28",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@module-federation/vite": "1.1.5",
@@ -35,4 +36,3 @@
     "vue-tsc": "^1.0.12"
   }
 }
-

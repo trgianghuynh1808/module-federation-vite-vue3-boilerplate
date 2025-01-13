@@ -10,7 +10,7 @@ export default defineConfig(async ({ command, mode }) => {
   return {
     base: "./",
     server: {
-      port: 3001,
+      port: 3002,
       strictPort: true,
       fs: {
         allow: ["."],
@@ -36,11 +36,18 @@ export default defineConfig(async ({ command, mode }) => {
       },
       federation({
         filename: "remoteEntry.js",
-        name: "remote",
+        name: "fleet-remote",
         exposes: {
-          "./remote-app": "./src/App.vue",
+          "./remoteModule": "./src/remote.ts",
         },
-        remotes: {},
+        shared: {
+          vue: {
+            singleton: true,
+          },
+          "vue-router": {
+            singleton: true,
+          },
+        },
       }),
       vue(),
       vueJsx(),
@@ -64,6 +71,9 @@ export default defineConfig(async ({ command, mode }) => {
           minifyInternalExports: false,
           format: "esm",
         },
+      },
+      modulePreload: {
+        polyfill: false,
       },
     },
   };

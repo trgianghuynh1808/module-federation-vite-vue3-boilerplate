@@ -1,40 +1,51 @@
-<script setup lang="ts">
-import { defineAsyncComponent } from "vue";
-import Counter from "./components/Counter.vue";
-const RemoteMFE = defineAsyncComponent(
-  // @ts-ignore
-  () => import("remote/remote-app")
-);
-</script>
-
 <template>
   <div class="host">
-    <div class="card" data-e2e="APP__CARD">
-      <div class="icon">
-        <svg
-          enable-background="new 0 0 512 512"
-          height="512px"
-          id="Layer_1"
-          version="1.1"
-          viewBox="0 0 512 512"
-          width="512px"
-          xml:space="preserve"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          data-e2e="STAR__SYMBOL"
-        >
-          <path
-            d="M316.01,199.02L256.134,14.817L196.239,199.02H1.134l158.102,113.324L98.53,496.487l157.604-114.232  l157.585,114.232l-60.687-184.143L511.134,199.02H316.01z M335.084,318.257l42.407,128.63L267.22,366.963l-11.086-8.033  l-11.086,8.033l-110.291,79.923l42.408-128.63l4.353-13.18l-11.289-8.08L59.903,217.909h136.336h13.724l4.242-13.051l41.929-128.957  l41.91,128.957l4.242,13.051h13.724h136.336l-110.327,79.088l-11.27,8.08L335.084,318.257z"
-            fill="#37404D"
-          />
-        </svg>
-      </div>
-      <div class="title">I'm the host app</div>
-      <Counter />
+    <div class="app-container">
+      <aside class="sidebar">
+        <nav>
+          <ul>
+            <li><router-link to="/coreRemote/users">Users</router-link></li>
+            <li>
+              <router-link to="/coreRemote/organizations"
+                >Organizations</router-link
+              >
+            </li>
+            <li>
+              <router-link to="/fleetRemote/vehicles">Vehicles</router-link>
+            </li>
+            <li>
+              <router-link to="/fleetRemote/about">Vehicles about</router-link>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <router-view />
+      </main>
     </div>
   </div>
-  <RemoteMFE v-if="!!RemoteMFE" />
 </template>
+
+<script setup lang="ts">
+import { onMounted, watch } from "vue";
+import { RouterLink, RouterView, useRouter } from "vue-router";
+
+const router = useRouter();
+
+onMounted(() => {
+  // Ensure we have a default route
+  if (router.currentRoute.value.path === "/") {
+    router.push("/coreRemote/users");
+  }
+});
+
+watch(
+  () => router.currentRoute.value,
+  (to) => {
+    console.log("Route changed to", to);
+  }
+);
+</script>
 
 <style scoped>
 .host .card {
@@ -61,5 +72,37 @@ const RemoteMFE = defineAsyncComponent(
 
 .host path {
   fill: #f6b352;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 250px;
+  background: #f3f4f6;
+  padding: 20px;
+}
+.content {
+  flex: 1;
+  padding: 20px;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+nav ul li {
+  margin-bottom: 10px;
+}
+nav ul li a {
+  text-decoration: none;
+  color: #374151;
+  padding: 8px 12px;
+  display: block;
+  border-radius: 6px;
+}
+nav ul li a.router-link-active {
+  background: #e5e7eb;
+  color: #000;
 }
 </style>
