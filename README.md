@@ -1,4 +1,4 @@
-# Vue3 host and remote
+# Vue3 Micro Fronted with Vite + Module Federation
 
 ## Demo
 [![Watch the video](https://img.youtube.com/vi/wQbjSDBbIJg/hqdefault.jpg)](https://www.youtube.com/watch?v=wQbjSDBbIJg)
