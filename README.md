@@ -1,6 +1,9 @@
 # Vue3 host and remote
 
-## Getting started
+## Demo
+[![Watch the video](https://img.youtube.com/vi/wQbjSDBbIJg/hqdefault.jpg)](https://www.youtube.com/watch?v=wQbjSDBbIJg)
+
+## Install
 
 From this root directory execute:
 
