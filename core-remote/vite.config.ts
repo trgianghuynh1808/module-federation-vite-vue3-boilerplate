@@ -23,6 +23,15 @@ export default defineConfig(async ({ command, mode }) => {
           "X-Requested-With, Content-Type, Authorization",
       },
     },
+    preview: {
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, Content-Type, Authorization",
+      },
+    },
     plugins: [
       {
         name: "generate-enviroment",
@@ -70,6 +79,9 @@ export default defineConfig(async ({ command, mode }) => {
         output: {
           minifyInternalExports: false,
           format: "esm",
+          chunkFileNames: () => {
+            return "[name]-[hash].js";
+          },
         },
       },
       modulePreload: {

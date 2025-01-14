@@ -7,76 +7,106 @@ import { defineConfig } from "vite";
 const CORE_REMOTE_PORT = 3001;
 const FLEET_REMOTE_PORT = 3002;
 
+// Helper to get remote URLs based on environment
+const getRemoteUrls = () => {
+  return {
+    core: `http://localhost:${CORE_REMOTE_PORT}`,
+    fleet: `http://localhost:${FLEET_REMOTE_PORT}`,
+  };
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default defineConfig(async (options) => ({
-  base: "./",
-  server: {
-    port: 3000,
-    strictPort: true,
-    fs: {
-      allow: ["."],
-    },
-    proxy: {
-      "/src/remote_assets": `http://localhost:${CORE_REMOTE_PORT}/`,
-      "/core": `http://localhost:${CORE_REMOTE_PORT}/`,
-      "/fleet": `http://localhost:${FLEET_REMOTE_PORT}/`,
-    },
-    // *INFO: CORS is required to allow the remote to be loaded in the host
-    cors: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, Content-Type, Authorization",
-    },
-  },
-  resolve: {
-    alias: {
-      vue: path.resolve(
-        __dirname,
-        "./node_modules/vue/dist/vue.runtime.esm-bundler.js"
-      ),
-      pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
-    },
-  },
-  // *INFO: this build config can able work with static page
-  build: {
-    target: "esnext",
-    minify: false,
-    cssCodeSplit: false,
-    rollupOptions: {
-      output: {
-        minifyInternalExports: false,
-        format: "esm",
+export default defineConfig(async ({ command }) => {
+  const remoteUrls = getRemoteUrls(command);
+
+  return {
+    base: "./",
+    server: {
+      port: 3000,
+      strictPort: true,
+      fs: {
+        allow: ["."],
+      },
+      proxy: {
+        "/src/remote_assets": `http://localhost:${CORE_REMOTE_PORT}/`,
+      },
+      // *INFO: CORS is required to allow the remote to be loaded in the host
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, Content-Type, Authorization",
       },
     },
-    modulePreload: {
-      polyfill: false,
+    preview: {
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers":
+          "X-Requested-With, Content-Type, Authorization",
+      },
     },
-  },
-  plugins: [
-    federation({
-      name: "host",
-      remotes: {
-        coreRemote: {
-          type: "module",
-          name: "coreRemote",
-          entry: `http://localhost:${CORE_REMOTE_PORT}/remoteEntry.js`,
-          entryGlobalName: "coreRemote",
-          shareScope: "default",
+    resolve: {
+      alias: {
+        vue: path.resolve(
+          __dirname,
+          "./node_modules/vue/dist/vue.runtime.esm-bundler.js"
+        ),
+        pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
+      },
+    },
+    // *INFO: this build config can able work with static page
+    build: {
+      target: "esnext",
+      minify: false,
+      cssCodeSplit: false,
+      rollupOptions: {
+        output: {
+          minifyInternalExports: false,
+          format: "esm",
         },
-        fleetRemote: {
-          type: "module",
-          name: "fleetRemote",
-          entry: `http://localhost:${FLEET_REMOTE_PORT}/remoteEntry.js`,
-          entryGlobalName: "fleetRemote",
-          shareScope: "default",
+        chunkFileNames: () => {
+          return "[name]-[hash].js";
         },
       },
-      exposes: {},
-      filename: "remoteEntry.js",
-    }),
-    vue(),
-    vueJsx(),
-  ],
-}));
+      modulePreload: {
+        polyfill: false,
+      },
+    },
+    plugins: [
+      federation({
+        name: "host",
+        remotes: {
+          coreRemote: {
+            type: "module",
+            name: "coreRemote",
+            entry: `${remoteUrls.core}/remoteEntry.js`,
+            entryGlobalName: "coreRemote",
+            shareScope: "default",
+          },
+          fleetRemote: {
+            type: "module",
+            name: "fleetRemote",
+            entry: `${remoteUrls.fleet}/remoteEntry.js`,
+            entryGlobalName: "fleetRemote",
+            shareScope: "default",
+          },
+        },
+        shared: {
+          vue: {
+            singleton: true,
+          },
+          "vue-router": {
+            singleton: true,
+          },
+        },
+        exposes: {},
+        filename: "remoteEntry.js",
+      }),
+      vue(),
+      vueJsx(),
+    ],
+  };
+});
