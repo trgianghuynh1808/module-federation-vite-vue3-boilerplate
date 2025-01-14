@@ -1,6 +1,7 @@
+import { eventBus } from "@/event";
 import { defineStore } from "pinia";
 
-const _useStore = defineStore("store", {
+export const useCoreCounterStore = defineStore("coreCounterStore", {
   state: () => ({ count: 0 }),
   getters: {
     getCount(): number {
@@ -10,14 +11,12 @@ const _useStore = defineStore("store", {
   actions: {
     increment() {
       this.count++;
+
+      eventBus.emit("remote-counter-incremented", this.count);
+    },
+
+    set(count: number) {
+      this.count = count;
     },
   },
 });
-
-declare global {
-  interface Window {
-    useStore: typeof _useStore;
-  }
-}
-
-export const useStore = window.useStore || _useStore;

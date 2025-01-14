@@ -16,6 +16,7 @@ const currentComponent = ref(null);
 
 const updateComponent = async (): Promise<void> => {
   const matched = routes.find((r) => r.path === route.path);
+
   if (matched?.component) {
     const component = matched?.component as (() => Promise<any>) | any;
 

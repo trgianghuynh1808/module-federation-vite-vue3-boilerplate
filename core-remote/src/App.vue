@@ -4,10 +4,10 @@
   <nav>
     <ul>
       <li>
-        <RouterLink to="/users">Go to Home</RouterLink>
+        <RouterLink to="/users">Go to Users</RouterLink>
       </li>
       <li>
-        <RouterLink to="/organizations">Go to About</RouterLink>
+        <RouterLink to="/organizations">Go to Organizations</RouterLink>
       </li>
     </ul>
   </nav>

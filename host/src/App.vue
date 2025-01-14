@@ -18,6 +18,8 @@
             </li>
           </ul>
         </nav>
+        <HostCounter />
+        <RemoteCounter />
       </aside>
       <main class="content">
         <router-view />
@@ -29,6 +31,9 @@
 <script setup lang="ts">
 import { onMounted, watch } from "vue";
 import { RouterLink, RouterView, useRouter } from "vue-router";
+
+import HostCounter from "./components/HostCounter.vue";
+import RemoteCounter from "./components/RemoteCounter.vue";
 
 const router = useRouter();
 

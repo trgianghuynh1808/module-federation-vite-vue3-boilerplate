@@ -17,7 +17,7 @@ const getRemoteUrls = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineConfig(async ({ command }) => {
-  const remoteUrls = getRemoteUrls(command);
+  const remoteUrls = getRemoteUrls();
 
   return {
     base: "./",
@@ -78,6 +78,7 @@ export default defineConfig(async ({ command }) => {
     plugins: [
       federation({
         name: "host",
+        filename: "remoteEntry.js",
         remotes: {
           coreRemote: {
             type: "module",
@@ -102,8 +103,6 @@ export default defineConfig(async ({ command }) => {
             singleton: true,
           },
         },
-        exposes: {},
-        filename: "remoteEntry.js",
       }),
       vue(),
       vueJsx(),

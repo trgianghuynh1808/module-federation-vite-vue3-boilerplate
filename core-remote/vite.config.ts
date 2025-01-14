@@ -45,12 +45,15 @@ export default defineConfig(async ({ command, mode }) => {
       },
       federation({
         filename: "remoteEntry.js",
-        name: "core-remote",
+        name: "coreRemote",
         exposes: {
           "./remoteModule": "./src/remote.ts",
         },
         shared: {
           vue: {
+            singleton: true,
+          },
+          pinia: {
             singleton: true,
           },
           "vue-router": {
