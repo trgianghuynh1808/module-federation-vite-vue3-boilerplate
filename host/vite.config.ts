@@ -57,6 +57,13 @@ export default defineConfig(async ({ command }) => {
         pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "vuetify/styles" as *;`,
+        },
+      },
+    },
     // *INFO: this build config can able work with static page
     build: {
       target: "esnext",
@@ -102,6 +109,7 @@ export default defineConfig(async ({ command }) => {
           "vue-router": {
             singleton: true,
           },
+          vuetify: { singleton: true },
         },
       }),
       vue(),

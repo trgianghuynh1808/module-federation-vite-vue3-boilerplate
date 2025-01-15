@@ -48,6 +48,7 @@ export default defineConfig(async ({ command, mode }) => {
         name: "coreRemote",
         exposes: {
           "./remoteModule": "./src/remote.ts",
+          "./styles": "./src/styles.ts",
         },
         shared: {
           vue: {
@@ -59,6 +60,7 @@ export default defineConfig(async ({ command, mode }) => {
           "vue-router": {
             singleton: true,
           },
+          vuetify: { singleton: true },
         },
       }),
       vue(),
@@ -74,16 +76,29 @@ export default defineConfig(async ({ command, mode }) => {
         pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "vuetify/styles" as *;`,
+        },
+      },
+    },
     build: {
       target: "esnext",
       minify: false,
-      cssCodeSplit: false,
+      cssCodeSplit: true,
       rollupOptions: {
         output: {
           minifyInternalExports: false,
           format: "esm",
           chunkFileNames: () => {
             return "[name]-[hash].js";
+          },
+          assetFileNames: (assetInfo: any) => {
+            if (assetInfo.name.endsWith(".css")) {
+              return "assets/[name][extname]";
+            }
+            return "assets/[name]-[hash][extname]";
           },
         },
       },

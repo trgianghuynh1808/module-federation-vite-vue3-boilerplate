@@ -1,3 +1,4 @@
+import "./styles.ts";
 import { createApp } from "vue";
 
 // *INFO: internal modules

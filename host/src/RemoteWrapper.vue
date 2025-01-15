@@ -59,9 +59,23 @@ const loadRemote = async (remoteName: string) => {
   }
 };
 
-onMounted(() => {
+const loadRemoteStyles = async (remoteName: string) => {
+  try {
+    switch (remoteName) {
+      case "coreRemote":
+        // @ts-ignore
+        await import("coreRemote/styles");
+        break;
+    }
+  } catch (error) {
+    console.warn(`Failed to load remote styles for ${remoteName}:`, error);
+  }
+};
+
+onMounted(async () => {
   if (mountPoint.value) {
-    loadRemote(props.remoteName);
+    await loadRemote(props.remoteName);
+    await loadRemoteStyles(props.remoteName);
   }
 });
 
@@ -83,6 +97,7 @@ watch(
 
     if (isUpdatedRemote) {
       await loadRemote(newRemoteName);
+      await loadRemoteStyles(props.remoteName);
     }
 
     const { remoteRouter } = remoteApp ?? {};
