@@ -4,6 +4,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import { writeFileSync } from "fs";
 import path from "path";
 import { defineConfig, loadEnv } from "vite";
+import vuetifyPlugin from "vite-plugin-vuetify";
 
 export default defineConfig(async ({ command, mode }) => {
   const selfEnv = loadEnv(mode, process.cwd());
@@ -65,6 +66,7 @@ export default defineConfig(async ({ command, mode }) => {
       }),
       vue(),
       vueJsx(),
+      vuetifyPlugin({ autoImport: true }),
     ],
     resolve: {
       alias: {
