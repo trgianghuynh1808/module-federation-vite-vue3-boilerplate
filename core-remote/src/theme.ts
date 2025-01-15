@@ -3,8 +3,11 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
+import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n";
+import { useI18n } from "vue-i18n";
 
 import { PRIMARY_COLOR } from "@/constants";
+import { i18n } from "@/locales";
 
 const vuetify = createVuetify({
   ssr: false,
@@ -45,6 +48,9 @@ const vuetify = createVuetify({
         },
       },
     },
+  },
+  locale: {
+    adapter: createVueI18nAdapter({ i18n, useI18n }),
   },
 });
 
