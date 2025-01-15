@@ -1,6 +1,5 @@
 <template>
   <h1>Hello Core Remote!</h1>
-  <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
   <nav>
     <ul>
       <li>

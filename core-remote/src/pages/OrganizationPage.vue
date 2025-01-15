@@ -3,6 +3,7 @@
     <h1>Organization Page (Core Remote)</h1>
     <p>This is the organization page.</p>
     <Counter />
+    <v-btn size="x-large">Default Elevation (2)</v-btn>
   </div>
 </template>
 
