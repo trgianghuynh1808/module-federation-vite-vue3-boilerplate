@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { hostEventListener } from "@/event";
-import { storeToRefs } from "pinia";
-import { onMounted, onUnmounted } from "vue";
-import { useCoreCounterStore } from "../stores";
+import { hostEventListener } from '@/event';
+import { storeToRefs } from 'pinia';
+import { onMounted, onUnmounted } from 'vue';
+import { useCoreCounterStore } from '../stores';
 const store = useCoreCounterStore();
 
 const { count } = storeToRefs(store);
@@ -12,11 +12,11 @@ const handleCountUpdated = (currentCount: number) => {
 };
 
 onMounted(() => {
-  hostEventListener.on("remote-counter-incremented", handleCountUpdated);
+  hostEventListener.on('remote-counter-incremented', handleCountUpdated);
 });
 
 onUnmounted(() => {
-  hostEventListener.off("remote-counter-incremented", handleCountUpdated);
+  hostEventListener.off('remote-counter-incremented', handleCountUpdated);
 });
 </script>
 

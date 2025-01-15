@@ -4,20 +4,20 @@ import {
   InMemoryCache,
   Observable,
   createHttpLink,
-} from "@apollo/client/core";
-import { onError } from "@apollo/client/link/error";
-import type { ExecutionResult } from "graphql";
-import type { ObjMap } from "graphql/jsutils/ObjMap";
-import { i18n } from "@/locales";
+} from '@apollo/client/core';
+import { onError } from '@apollo/client/link/error';
+import type { ExecutionResult } from 'graphql';
+import type { ObjMap } from 'graphql/jsutils/ObjMap';
+import { i18n } from '@/locales';
 
 // internal modules
-import { EErrorCode } from "@/enums";
+import { EErrorCode } from '@/enums';
 // import { useAppStore } from "@/stores/app.store";
 
 let isTokenRefreshing = false;
 
 const httpLink = createHttpLink({
-  uri: "YOUR_GRAPHQL_ENDPOINT",
+  uri: 'YOUR_GRAPHQL_ENDPOINT',
   fetchOptions: {},
   fetch: (uri, options) => {
     const time = new Date();
@@ -26,9 +26,9 @@ const httpLink = createHttpLink({
       ...options,
       headers: {
         ...options?.headers,
-        oid: localStorage.getItem("_k_oid") || "",
-        authorization: localStorage.getItem("_k_aut") || "",
-        "accept-language": i18n.global.locale.value,
+        oid: localStorage.getItem('_k_oid') || '',
+        authorization: localStorage.getItem('_k_aut') || '',
+        'accept-language': i18n.global.locale.value,
       },
     };
 
@@ -48,6 +48,7 @@ const CASE_UNAUTHENTICATED = [
   EErrorCode.SESSION_EXPIRED,
 ];
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const callbacks: { [key: string]: Function } = {
   // AUTH_REFRESH_TOKEN_TIMEOUT() {
   //   const appStore = useAppStore();
@@ -63,25 +64,25 @@ const checkResolverError = (response?: ExecutionResult): boolean => {
     firstValue = response.data[firstKey];
   }
 
-  return [firstValue, response?.errors?.length].every((item) => Boolean(item));
+  return [firstValue, response?.errors?.length].every(item => Boolean(item));
 };
 
 const errorLink = onError(({ graphQLErrors, operation, response, forward }) => {
   if (!graphQLErrors) return;
 
-  const error = graphQLErrors.find((e) =>
+  const error = graphQLErrors.find(e =>
     [
       ...CASE_ERROR_CODE,
       ...CASE_UNAUTHENTICATED,
       ...CASE_REFRESH_TOKEN,
-    ].includes(<EErrorCode>e?.extensions?.code)
+    ].includes(<EErrorCode>e?.extensions?.code),
   );
 
   if (!error) return;
 
   const handleClearToken = () => {
-    localStorage.removeItem("_k_aut"); // Clear token
-    window.location.href = "/"; // Redirect to home
+    localStorage.removeItem('_k_aut'); // Clear token
+    window.location.href = '/'; // Redirect to home
   };
 
   const errorCode = <EErrorCode>error?.extensions?.code;
@@ -91,14 +92,14 @@ const errorLink = onError(({ graphQLErrors, operation, response, forward }) => {
   }
 
   if (CASE_REFRESH_TOKEN.includes(errorCode)) {
-    return new Observable((observer) => {
+    return new Observable(observer => {
       if (isTokenRefreshing) {
         setTimeout(() => {
           const { headers } = operation.getContext();
           operation.setContext({
             headers: {
               ...headers,
-              authorization: localStorage.getItem("_k_aut"),
+              authorization: localStorage.getItem('_k_aut'),
             },
           });
           forward(operation).subscribe(observer);
@@ -110,14 +111,14 @@ const errorLink = onError(({ graphQLErrors, operation, response, forward }) => {
       isTokenRefreshing = true;
 
       // Implement your refresh token logic here
-      refreshToken().then((ok) => {
+      refreshToken().then(ok => {
         isTokenRefreshing = false;
         if (ok) {
           const { headers } = operation.getContext();
           operation.setContext({
             headers: {
               ...headers,
-              authorization: localStorage.getItem("_k_aut"),
+              authorization: localStorage.getItem('_k_aut'),
             },
           });
           forward(operation).subscribe(observer);
@@ -129,9 +130,9 @@ const errorLink = onError(({ graphQLErrors, operation, response, forward }) => {
   }
 
   if (CASE_ERROR_CODE.includes(errorCode)) {
-    return new Observable((observer) => {
+    return new Observable(observer => {
       const isResolverError = checkResolverError(
-        response as ExecutionResult<ObjMap<unknown>, ObjMap<unknown>>
+        response as ExecutionResult<ObjMap<unknown>, ObjMap<unknown>>,
       );
 
       callbacks[errorCode] && callbacks[errorCode]();

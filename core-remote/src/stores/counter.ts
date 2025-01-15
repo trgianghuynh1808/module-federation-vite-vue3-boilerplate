@@ -1,7 +1,7 @@
-import { eventBus } from "@/event";
-import { defineStore } from "pinia";
+import { eventBus } from '@/event';
+import { defineStore } from 'pinia';
 
-export const useCoreCounterStore = defineStore("coreCounterStore", {
+export const useCoreCounterStore = defineStore('coreCounterStore', {
   state: () => ({ count: 0 }),
   getters: {
     getCount(): number {
@@ -12,7 +12,7 @@ export const useCoreCounterStore = defineStore("coreCounterStore", {
     increment() {
       this.count++;
 
-      eventBus.emit("remote-counter-incremented", this.count);
+      eventBus.emit('remote-counter-incremented', this.count);
     },
 
     set(count: number) {

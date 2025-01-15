@@ -1,1 +1,1 @@
-import "vuetify/styles"; // Ensure styles are imported
+import 'vuetify/styles'; // Ensure styles are imported

@@ -1,11 +1,11 @@
-import { createApp } from "vue";
+import { createApp } from 'vue';
 
 // *INFO: internal modules
-import BasePage from "./BasePage.vue";
-import router from "./router";
-import { pinia } from "./stores";
-import { vuetify } from "./theme";
-import { i18n } from "./locales";
+import BasePage from './BasePage.vue';
+import router from './router';
+import { pinia } from './stores';
+import { vuetify } from './theme';
+import { i18n } from './locales';
 
 const createRemoteBasePage = () => {
   const app = createApp(BasePage);

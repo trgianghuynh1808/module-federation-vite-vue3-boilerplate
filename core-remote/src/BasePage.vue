@@ -5,24 +5,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 // *INFO: internal modules
-import { routes } from "./router";
+import { routes } from './router';
 
 const route = useRoute();
 const currentComponent = ref(null);
 
 const updateComponent = async (): Promise<void> => {
-  const matched = routes.find((r) => r.path === route.path);
+  const matched = routes.find(r => r.path === route.path);
   if (matched?.component) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const component = matched?.component as (() => Promise<any>) | any;
 
-    currentComponent.value = (await (component &&
-      typeof component === "function"))
-      ? component()
-      : matched.component;
+    currentComponent.value =
+      component && typeof component === 'function'
+        ? await component()
+        : matched.component;
   }
 };
 

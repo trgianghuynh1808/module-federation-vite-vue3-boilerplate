@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { hostEventListener } from "@/event";
-import { onMounted, onUnmounted, ref } from "vue";
+import { hostEventListener } from '@/event';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const hostCount = ref(0);
 
@@ -18,11 +18,11 @@ const handleHostCountUpdated = (count: number) => {
 };
 
 onMounted(() => {
-  hostEventListener.on("host-counter-incremented", handleHostCountUpdated);
+  hostEventListener.on('host-counter-incremented', handleHostCountUpdated);
 });
 
 onUnmounted(() => {
-  hostEventListener.off("host-counter-incremented", handleHostCountUpdated);
+  hostEventListener.off('host-counter-incremented', handleHostCountUpdated);
 });
 </script>
 

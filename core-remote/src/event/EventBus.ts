@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type TEventCallback = (data: any) => void;
 type TEventData<T = any> = T;
 
@@ -7,7 +8,7 @@ export default class EventBus {
 
   constructor() {
     this.listeners = new Map();
-    this.emitter = "core-remote";
+    this.emitter = 'core-remote';
   }
 
   private _generateEventName(eventName: string): string {
@@ -16,7 +17,7 @@ export default class EventBus {
 
   public emit(eventName: string, data?: TEventData): void {
     window.dispatchEvent(
-      new CustomEvent(this._generateEventName(eventName), { detail: data })
+      new CustomEvent(this._generateEventName(eventName), { detail: data }),
     );
   }
 

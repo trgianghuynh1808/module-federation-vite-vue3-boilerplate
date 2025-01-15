@@ -16,14 +16,14 @@ const currentComponent = ref(null);
 
 const updateComponent = async (): Promise<void> => {
   const matched = routes.find((r) => r.path === route.path);
-
   if (matched?.component) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const component = matched?.component as (() => Promise<any>) | any;
 
-    currentComponent.value = (await (component &&
-      typeof component === "function"))
-      ? component()
-      : matched.component;
+    currentComponent.value =
+      component && typeof component === "function"
+        ? await component()
+        : matched.component;
   }
 };
 

@@ -1,55 +1,55 @@
-import { federation } from "@module-federation/vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import { writeFileSync } from "fs";
-import path from "path";
-import { defineConfig, loadEnv } from "vite";
-import vuetifyPlugin from "vite-plugin-vuetify";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { federation } from '@module-federation/vite';
+import vue from '@vitejs/plugin-vue';
+import { writeFileSync } from 'fs';
+import * as path from 'path';
+import { defineConfig, loadEnv } from 'vite';
+import vuetifyPlugin from 'vite-plugin-vuetify';
 
-export default defineConfig(async ({ command, mode }) => {
+export default defineConfig(({ mode }) => {
   const selfEnv = loadEnv(mode, process.cwd());
   return {
-    base: "./",
+    base: './',
     server: {
       port: 3001,
       strictPort: true,
       fs: {
-        allow: ["."],
+        allow: ['.'],
       },
       cors: true, // Enable CORS for preview mode too
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, Content-Type, Authorization",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'X-Requested-With, Content-Type, Authorization',
       },
     },
     preview: {
       cors: true,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "X-Requested-With, Content-Type, Authorization",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'X-Requested-With, Content-Type, Authorization',
       },
     },
     plugins: [
       {
-        name: "generate-enviroment",
+        name: 'generate-enviroment',
         options: function () {
-          console.info("selfEnv", selfEnv);
+          console.info('selfEnv', selfEnv);
           writeFileSync(
-            "./src/enviroment.ts",
-            `export default ${JSON.stringify(selfEnv, null, 2)};`
+            './src/enviroment.ts',
+            `export default ${JSON.stringify(selfEnv, null, 2)};`,
           );
         },
       },
       federation({
-        filename: "remoteEntry.js",
-        name: "coreRemote",
+        filename: 'remoteEntry.js',
+        name: 'coreRemote',
         exposes: {
-          "./remoteModule": "./src/remote.ts",
-          "./styles": "./src/styles.ts",
+          './remoteModule': './src/remote.ts',
+          './styles': './src/styles.ts',
         },
         shared: {
           vue: {
@@ -58,24 +58,23 @@ export default defineConfig(async ({ command, mode }) => {
           pinia: {
             singleton: true,
           },
-          "vue-router": {
+          'vue-router': {
             singleton: true,
           },
           vuetify: { singleton: true },
         },
       }),
       vue(),
-      vueJsx(),
       vuetifyPlugin({ autoImport: true }),
     ],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "src"),
+        '@': path.resolve(__dirname, 'src'),
         vue: path.resolve(
           __dirname,
-          "./node_modules/vue/dist/vue.runtime.esm-bundler.js"
+          './node_modules/vue/dist/vue.runtime.esm-bundler.js',
         ),
-        pinia: path.resolve(__dirname, "./node_modules/pinia/dist/pinia.mjs"),
+        pinia: path.resolve(__dirname, './node_modules/pinia/dist/pinia.mjs'),
       },
     },
     css: {
@@ -86,21 +85,21 @@ export default defineConfig(async ({ command, mode }) => {
       },
     },
     build: {
-      target: "esnext",
+      target: 'esnext',
       minify: false,
       cssCodeSplit: true,
       rollupOptions: {
         output: {
           minifyInternalExports: false,
-          format: "esm",
+          format: 'esm',
           chunkFileNames: () => {
-            return "[name]-[hash].js";
+            return '[name]-[hash].js';
           },
           assetFileNames: (assetInfo: any) => {
-            if (assetInfo.name.endsWith(".css")) {
-              return "assets/[name][extname]";
+            if (assetInfo.name.endsWith('.css')) {
+              return 'assets/[name][extname]';
             }
-            return "assets/[name]-[hash][extname]";
+            return 'assets/[name]-[hash][extname]';
           },
         },
       },

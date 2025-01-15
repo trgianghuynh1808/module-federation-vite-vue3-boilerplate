@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type TEventCallback = (data: any) => void;
 
 export default class EventListener {
